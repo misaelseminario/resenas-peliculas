@@ -6,6 +6,7 @@ import 'controllers/auth_controller.dart';
 import 'controllers/catalogo_controller.dart';
 import 'firebase_options.dart';
 import 'repositories/peliculas_repository.dart';
+import 'repositories/resenas_repository.dart';
 import 'screens/catalogo_screen.dart';
 import 'screens/login_screen.dart';
 import 'services/auth_service.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
   Get.put(AuthController(), permanent: true);
   Get.put<PeliculasRepository>(FirestorePeliculasRepository(), permanent: true);
   Get.put(CatalogoController(), permanent: true);
+  Get.put<ResenasRepository>(FirestoreResenasRepository(), permanent: true);
   runApp(const ResenasApp());
 }
 

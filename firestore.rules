@@ -11,6 +11,29 @@ service cloud.firestore {
     match /peliculas/{peliculaId} {
       allow read: if request.auth != null;
       allow write: if false;
+
+      // Reseñas: cada persona tiene UNA reseña por película, guardada con su
+      // propio uid como id. Todos los usuarios con sesión las leen (es una
+      // funcionalidad colaborativa); solo su autor puede crearla, editarla o
+      // borrarla, y el servidor valida el contenido.
+      match /resenas/{uid} {
+        allow read: if request.auth != null;
+        allow create, update: if request.auth != null
+          && request.auth.uid == uid
+          && resenaValida(request.resource.data, uid);
+        allow delete: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    function resenaValida(datos, uid) {
+      return datos.keys().hasOnly(['uid', 'autor', 'estrellas', 'texto', 'fecha'])
+        && datos.uid == uid
+        && datos.autor == request.auth.token.email
+        && datos.estrellas is int
+        && datos.estrellas >= 1 && datos.estrellas <= 5
+        && datos.texto is string
+        && datos.texto.size() >= 3 && datos.texto.size() <= 500
+        && datos.fecha == request.time;
     }
   }
 }
