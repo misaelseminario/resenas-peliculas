@@ -48,7 +48,14 @@ class FirestorePeliculasRepository implements PeliculasRepository {
   @override
   Future<List<Pelicula>> obtenerCatalogo() async {
     try {
-      final snap = await _db.collection('peliculas').orderBy('titulo').get().timeout(const Duration(seconds: 15));
+      // Por qué `Source.server`: sin conexión, Firestore devolvería en silencio
+      // la copia que tiene en memoria y la persona nunca sabría que no hay red.
+      // Pidiendo siempre al servidor, la falta de conexión llega como error.
+      final snap = await _db
+          .collection('peliculas')
+          .orderBy('titulo')
+          .get(const GetOptions(source: Source.server))
+          .timeout(const Duration(seconds: 15));
       return snap.docs.map((d) => Pelicula.desdeMapa(d.id, d.data())).toList();
     } catch (e) {
       throw DatosException.desde(e);
