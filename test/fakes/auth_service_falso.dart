@@ -41,6 +41,9 @@ class AuthServiceFalso implements AuthService {
     _cambios.add(null);
   }
 
+  @override
+  Future<String?> tokenActual() async => _actual == null ? null : 'token-de-prueba';
+
   UsuarioApp _abrir(String correo) {
     _actual = UsuarioApp(uid: 'uid-$correo', correo: correo);
     _cambios.add(_actual);

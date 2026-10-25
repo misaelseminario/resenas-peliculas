@@ -10,6 +10,7 @@ import '../widgets/boton_por_ver.dart';
 import '../widgets/cargando_view.dart';
 import '../widgets/estado_views.dart';
 import '../widgets/poster_pelicula.dart';
+import 'asistente_screen.dart';
 import 'detalle_pelicula_screen.dart';
 import 'lista_por_ver_screen.dart';
 
@@ -45,6 +46,11 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
       appBar: AppBar(
         title: const Text('Películas'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.auto_awesome),
+            tooltip: 'Asistente de películas',
+            onPressed: () => Get.to(() => const AsistenteScreen()),
+          ),
           Obx(() => IconButton(
                 tooltip: 'Mi lista por ver',
                 onPressed: () => Get.to(() => const ListaPorVerScreen()),

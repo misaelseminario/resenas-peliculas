@@ -23,6 +23,10 @@ abstract class AuthService {
   Future<UsuarioApp> iniciarSesion(String correo, String clave);
 
   Future<void> cerrarSesion();
+
+  /// Token de identidad de la sesión actual, para servidores propios (el
+  /// asistente). Se usa solo en la cabecera `Authorization`; nunca se imprime.
+  Future<String?> tokenActual();
 }
 
 /// Implementación real con Firebase Authentication. El token lo guarda y lo
@@ -45,6 +49,9 @@ class FirebaseAuthService implements AuthService {
 
   @override
   Future<void> cerrarSesion() => _auth.signOut();
+
+  @override
+  Future<String?> tokenActual() async => _auth.currentUser?.getIdToken();
 
   Future<UsuarioApp> _ejecutar(Future<UserCredential> Function() accion) async {
     try {

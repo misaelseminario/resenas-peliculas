@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controllers/asistente_controller.dart';
 import '../controllers/catalogo_controller.dart' show EstadoCarga;
 import '../controllers/resenas_controller.dart';
 import '../models/pelicula.dart';
@@ -10,6 +11,7 @@ import '../widgets/boton_por_ver.dart';
 import '../widgets/estado_views.dart';
 import '../widgets/estrellas.dart';
 import '../widgets/poster_pelicula.dart';
+import '../widgets/respuesta_ia.dart';
 import 'formulario_resena.dart';
 
 /// Ficha de una película con sus reseñas en tiempo real.
@@ -24,12 +26,14 @@ class DetallePeliculaScreen extends StatefulWidget {
 
 class _DetallePeliculaScreenState extends State<DetallePeliculaScreen> {
   late final ResenasController _resenas;
+  final _asistente = Get.find<AsistenteController>();
 
   @override
   void initState() {
     super.initState();
     // Un controlador por película (tag = id), vivo solo mientras está abierta.
     _resenas = Get.put(ResenasController(widget.pelicula.id), tag: widget.pelicula.id);
+    _asistente.resumen.reiniciar();
   }
 
   @override
@@ -139,6 +143,17 @@ class _DetallePeliculaScreenState extends State<DetallePeliculaScreen> {
                   ],
                 ),
               ),
+            if (lista.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Obx(() => OutlinedButton.icon(
+                    onPressed: _asistente.resumen.cargando.value
+                        ? null
+                        : () => _asistente.resumirResenas(widget.pelicula, _resenas.resenas),
+                    icon: const Icon(Icons.auto_awesome),
+                    label: const Text('Resumir reseñas con IA'),
+                  )),
+              RespuestaIA(consulta: _asistente.resumen),
+            ],
             if (lista.isEmpty)
               const VacioView(mensaje: 'Aún no hay reseñas. ¡Sé la primera persona en opinar!')
             else

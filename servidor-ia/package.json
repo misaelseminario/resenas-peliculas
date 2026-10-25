@@ -1,0 +1,8 @@
+{
+  "name": "servidor-ia-resenas-peliculas",
+  "private": true,
+  "type": "module",
+  "description": "Servidor propio del asistente de IA: guarda la clave de Gemini y verifica la sesión de Firebase.",
+  "engines": { "node": ">=18" },
+  "scripts": { "start": "node servidor.js" }
+}

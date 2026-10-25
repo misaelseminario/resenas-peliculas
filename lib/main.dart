@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'controllers/asistente_controller.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/catalogo_controller.dart';
 import 'controllers/lista_por_ver_controller.dart';
@@ -12,6 +13,7 @@ import 'repositories/peliculas_repository.dart';
 import 'repositories/resenas_repository.dart';
 import 'screens/catalogo_screen.dart';
 import 'screens/login_screen.dart';
+import 'services/asistente_service.dart';
 import 'services/auth_service.dart';
 import 'theme/app_theme.dart';
 import 'widgets/cargando_view.dart';
@@ -27,6 +29,8 @@ Future<void> main() async {
   Get.put<ResenasRepository>(FirestoreResenasRepository(), permanent: true);
   Get.put<ListaPorVerRepository>(HiveListaPorVerRepository(), permanent: true);
   Get.put(ListaPorVerController(), permanent: true);
+  Get.put<AsistenteService>(HttpAsistenteService(auth: Get.find<AuthService>()), permanent: true);
+  Get.put(AsistenteController(), permanent: true);
   runApp(const ResenasApp());
 }
 

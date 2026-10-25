@@ -46,3 +46,13 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Secretos: nunca se suben (usa servidor-ia/.env.example como plantilla)
+.env
+.env.*
+!.env.example
+node_modules/
+
+# Configuración local del agente de código
+.claude/settings.local.json
+CLAUDE.local.md
