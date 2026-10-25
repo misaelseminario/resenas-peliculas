@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'controllers/auth_controller.dart';
+import 'controllers/catalogo_controller.dart';
 import 'firebase_options.dart';
-import 'screens/inicio_screen.dart';
+import 'repositories/peliculas_repository.dart';
+import 'screens/catalogo_screen.dart';
 import 'screens/login_screen.dart';
 import 'services/auth_service.dart';
 import 'theme/app_theme.dart';
@@ -15,6 +17,8 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Get.put<AuthService>(FirebaseAuthService(), permanent: true);
   Get.put(AuthController(), permanent: true);
+  Get.put<PeliculasRepository>(FirestorePeliculasRepository(), permanent: true);
+  Get.put(CatalogoController(), permanent: true);
   runApp(const ResenasApp());
 }
 
@@ -43,7 +47,7 @@ class PuertaSesion extends StatelessWidget {
       if (auth.comprobandoSesion.value) {
         return const Scaffold(body: CargandoView(mensaje: 'Comprobando sesión...'));
       }
-      return auth.estaAutenticado ? const InicioScreen() : const LoginScreen();
+      return auth.estaAutenticado ? const CatalogoScreen() : const LoginScreen();
     });
   }
 }

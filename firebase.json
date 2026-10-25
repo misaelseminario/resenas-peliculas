@@ -1,1 +1,25 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"resenas-peliculas","appId":"1:638188129765:android:28254c2986596e63df330c","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"resenas-peliculas","configurations":{"android":"1:638188129765:android:28254c2986596e63df330c","web":"1:638188129765:web:47432ac8e6a845a9df330c"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "resenas-peliculas",
+          "appId": "1:638188129765:android:28254c2986596e63df330c",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "resenas-peliculas",
+          "configurations": {
+            "android": "1:638188129765:android:28254c2986596e63df330c",
+            "web": "1:638188129765:web:47432ac8e6a845a9df330c"
+          }
+        }
+      }
+    }
+  }
+}
