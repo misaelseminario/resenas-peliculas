@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "638188129765",
+    "project_id": "resenas-peliculas",
+    "storage_bucket": "resenas-peliculas.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638188129765:android:28254c2986596e63df330c",
+        "android_client_info": {
+          "package_name": "com.misaelseminario.resenas_peliculas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwK0wFWkpNjLidUESEF-AVgQSLJfIDIIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
