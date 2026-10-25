@@ -1,0 +1,71 @@
+# Entrega continua (CD): verifica, compila y publica el APK.
+#
+#   - ci.yml       → en CADA cambio: analiza y prueba.
+#   - este archivo → en CADA VERSIÓN (etiqueta «v…»): vuelve a verificar,
+#                    compila el APK de release y lo publica en un Release.
+#
+# Formas de ejecutarlo:
+#   1. Subir una etiqueta: git tag v1.0.0 && git push origin v1.0.0
+#   2. A mano: pestaña Actions → «Release APK» → «Run workflow» (solo deja el
+#      APK como artefacto, sin Release).
+#
+# La dirección del servidor del asistente se puede cambiar sin tocar este archivo:
+# Settings → Secrets and variables → Actions → Variables → ASISTENTE_URL.
+# Si no existe, el APK usa la del emulador Android (http://10.0.2.2:3000).
+# Firebase no necesita configuración aquí: su archivo público ya está en el repo.
+
+name: Release APK
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write # necesario para crear el Release y adjuntar el APK
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v7
+
+      - name: Instalar Java 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Instalar Flutter (la misma versión del desarrollo)
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.5'
+          channel: stable
+          cache: true
+
+      - name: Descargar las dependencias
+        run: flutter pub get
+
+      - name: Analizar el código
+        run: flutter analyze --no-fatal-infos
+
+      - name: Ejecutar las pruebas
+        run: flutter test
+
+      - name: Compilar el APK de release
+        run: flutter build apk --release --dart-define=ASISTENTE_URL=${{ vars.ASISTENTE_URL || 'http://10.0.2.2:3000' }}
+
+      - name: Guardar el APK como artefacto de la ejecución
+        uses: actions/upload-artifact@v7
+        with:
+          name: resenas-peliculas-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Publicar el Release con el APK (solo con etiqueta)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v3
+        with:
+          files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
