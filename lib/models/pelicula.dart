@@ -20,6 +20,17 @@ class Pelicula {
   final int duracion;
   final String sinopsis;
 
+  /// Para guardar la película en la lista local (Hive) con lo necesario para
+  /// mostrarla aunque el catálogo todavía no haya cargado.
+  Map<String, dynamic> aMapa() => {
+        'titulo': titulo,
+        'anio': anio,
+        'genero': genero,
+        'director': director,
+        'duracion': duracion,
+        'sinopsis': sinopsis,
+      };
+
   factory Pelicula.desdeMapa(String id, Map<String, dynamic> datos) => Pelicula(
         id: id,
         titulo: datos['titulo'] as String? ?? 'Sin título',

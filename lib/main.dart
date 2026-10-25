@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'controllers/auth_controller.dart';
 import 'controllers/catalogo_controller.dart';
+import 'controllers/lista_por_ver_controller.dart';
 import 'firebase_options.dart';
+import 'repositories/lista_por_ver_repository.dart';
 import 'repositories/peliculas_repository.dart';
 import 'repositories/resenas_repository.dart';
 import 'screens/catalogo_screen.dart';
@@ -16,11 +19,14 @@ import 'widgets/cargando_view.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Hive.initFlutter();
   Get.put<AuthService>(FirebaseAuthService(), permanent: true);
   Get.put(AuthController(), permanent: true);
   Get.put<PeliculasRepository>(FirestorePeliculasRepository(), permanent: true);
   Get.put(CatalogoController(), permanent: true);
   Get.put<ResenasRepository>(FirestoreResenasRepository(), permanent: true);
+  Get.put<ListaPorVerRepository>(HiveListaPorVerRepository(), permanent: true);
+  Get.put(ListaPorVerController(), permanent: true);
   runApp(const ResenasApp());
 }
 

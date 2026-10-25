@@ -3,12 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:resenas_peliculas/controllers/auth_controller.dart';
 import 'package:resenas_peliculas/controllers/catalogo_controller.dart';
+import 'package:resenas_peliculas/controllers/lista_por_ver_controller.dart';
+import 'package:resenas_peliculas/repositories/lista_por_ver_repository.dart';
 import 'package:resenas_peliculas/main.dart';
 import 'package:resenas_peliculas/models/usuario_app.dart';
 import 'package:resenas_peliculas/repositories/peliculas_repository.dart';
 import 'package:resenas_peliculas/services/auth_service.dart';
 
 import 'fakes/auth_service_falso.dart';
+import 'fakes/lista_por_ver_repository_falso.dart';
 import 'fakes/peliculas_repository_falso.dart';
 
 AuthServiceFalso _montar({UsuarioApp? sesionGuardada}) {
@@ -19,6 +22,8 @@ AuthServiceFalso _montar({UsuarioApp? sesionGuardada}) {
   Get.put(AuthController());
   Get.put<PeliculasRepository>(PeliculasRepositoryFalso());
   Get.put(CatalogoController());
+  Get.put<ListaPorVerRepository>(ListaPorVerRepositoryFalso());
+  Get.put(ListaPorVerController());
   return servicio;
 }
 

@@ -3,12 +3,15 @@ import 'package:get/get.dart';
 
 import '../controllers/auth_controller.dart';
 import '../controllers/catalogo_controller.dart';
+import '../controllers/lista_por_ver_controller.dart';
 import '../models/pelicula.dart';
 import '../theme/app_theme.dart';
+import '../widgets/boton_por_ver.dart';
 import '../widgets/cargando_view.dart';
 import '../widgets/estado_views.dart';
 import '../widgets/poster_pelicula.dart';
 import 'detalle_pelicula_screen.dart';
+import 'lista_por_ver_screen.dart';
 
 /// Pantalla principal: el catálogo con búsqueda y filtro por género. Cubre los
 /// tres estados: cargando, vacío y error.
@@ -22,6 +25,7 @@ class CatalogoScreen extends StatefulWidget {
 class _CatalogoScreenState extends State<CatalogoScreen> {
   final _catalogo = Get.find<CatalogoController>();
   final _auth = Get.find<AuthController>();
+  final _porVer = Get.find<ListaPorVerController>();
   final _textoBusqueda = TextEditingController();
 
   @override
@@ -41,6 +45,15 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
       appBar: AppBar(
         title: const Text('Películas'),
         actions: [
+          Obx(() => IconButton(
+                tooltip: 'Mi lista por ver',
+                onPressed: () => Get.to(() => const ListaPorVerScreen()),
+                icon: Badge(
+                  isLabelVisible: _porVer.peliculas.isNotEmpty,
+                  label: Text('${_porVer.peliculas.length}'),
+                  child: const Icon(Icons.bookmarks_outlined),
+                ),
+              )),
           IconButton(icon: const Icon(Icons.refresh), tooltip: 'Recargar', onPressed: _catalogo.cargar),
           IconButton(icon: const Icon(Icons.logout), tooltip: 'Cerrar sesión', onPressed: _auth.cerrarSesion),
         ],
@@ -133,7 +146,7 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
             leading: PosterPelicula(pelicula: p, ancho: 40),
             title: Text(p.titulo),
             subtitle: Text('${p.anio} · ${p.genero} · ${p.director}'),
-            trailing: const Icon(Icons.chevron_right),
+            trailing: BotonPorVer(pelicula: p),
             onTap: () => Get.to(() => DetallePeliculaScreen(pelicula: p)),
           );
         },

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:resenas_peliculas/controllers/auth_controller.dart';
+import 'package:resenas_peliculas/controllers/lista_por_ver_controller.dart';
 import 'package:resenas_peliculas/controllers/resenas_controller.dart';
+import 'package:resenas_peliculas/repositories/lista_por_ver_repository.dart';
 import 'package:resenas_peliculas/models/usuario_app.dart';
 import 'package:resenas_peliculas/repositories/peliculas_repository.dart' show DatosException;
 import 'package:resenas_peliculas/repositories/resenas_repository.dart';
@@ -10,6 +12,7 @@ import 'package:resenas_peliculas/screens/detalle_pelicula_screen.dart';
 import 'package:resenas_peliculas/services/auth_service.dart';
 
 import 'fakes/auth_service_falso.dart';
+import 'fakes/lista_por_ver_repository_falso.dart';
 import 'fakes/peliculas_repository_falso.dart';
 import 'fakes/resenas_repository_falso.dart';
 
@@ -20,6 +23,8 @@ ResenasRepositoryFalso _montar() {
   Get.put(AuthController());
   final repo = ResenasRepositoryFalso();
   Get.put<ResenasRepository>(repo);
+  Get.put<ListaPorVerRepository>(ListaPorVerRepositoryFalso());
+  Get.put(ListaPorVerController());
   return repo;
 }
 

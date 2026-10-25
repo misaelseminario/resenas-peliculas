@@ -6,6 +6,7 @@ import '../controllers/resenas_controller.dart';
 import '../models/pelicula.dart';
 import '../models/resena.dart';
 import '../theme/app_theme.dart';
+import '../widgets/boton_por_ver.dart';
 import '../widgets/estado_views.dart';
 import '../widgets/estrellas.dart';
 import '../widgets/poster_pelicula.dart';
@@ -60,7 +61,7 @@ class _DetallePeliculaScreenState extends State<DetallePeliculaScreen> {
     final p = widget.pelicula;
     final textos = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: AppBar(title: Text(p.titulo)),
+      appBar: AppBar(title: Text(p.titulo), actions: [BotonPorVer(pelicula: p, color: Colors.white)]),
       floatingActionButton: Obx(() => FloatingActionButton.extended(
             onPressed: _resenas.enviando.value ? null : () => FormularioResena.abrir(context, _resenas),
             icon: Icon(_resenas.miResena == null ? Icons.rate_review : Icons.edit),
