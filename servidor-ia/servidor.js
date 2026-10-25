@@ -124,8 +124,12 @@ async function preguntarAGemini(instrucciones, datos) {
   const datosRespuesta = await r.json();
   const texto = datosRespuesta.candidates?.[0]?.content?.parts?.map((p) => p.text).join('').trim();
   if (!texto) throw new ErrorProveedor(502, 'El servicio de IA no devolvió una respuesta. Inténtalo de nuevo.');
-  return texto;
+  // La app muestra texto plano: se quitan las marcas de Markdown que a veces
+  // agrega el modelo (negritas con ** y viñetas con * al inicio de línea).
+  return texto.replace(/\*\*(.+?)\*\*/g, '$1').replace(/^\s*[*-]\s+/gm, '• ');
 }
+
+const FORMATO = ' Responde en texto plano, sin Markdown (sin asteriscos ni almohadillas); usa «•» para las listas.';
 
 const INSTRUCCIONES = {
   resumen:
@@ -182,7 +186,7 @@ const servidor = createServer(async (req, res) => {
 
   try {
     const respuesta = CLAVE
-      ? await preguntarAGemini(INSTRUCCIONES[cuerpo.tipo], cuerpo)
+      ? await preguntarAGemini(INSTRUCCIONES[cuerpo.tipo] + FORMATO, cuerpo)
       : cuerpo.tipo === 'resumen'
         ? resumirConReglas(cuerpo)
         : recomendarConReglas(cuerpo);
