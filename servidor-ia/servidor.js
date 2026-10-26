@@ -75,17 +75,39 @@ function resumirConReglas({ pelicula, resenas }) {
     `${positivas} opinión(es) positiva(s) y ${negativas} negativa(s).`;
 }
 
+// Palabras que la gente usa para pedir cada género (sin tildes, en minúsculas).
+const PALABRAS_POR_GENERO = {
+  'animación': ['anima', 'dibujo', 'familia', 'ninos', 'infantil'],
+  'ciencia ficción': ['ciencia', 'ficcion', 'espacio', 'futur', 'robot', 'matrix'],
+  'terror': ['terror', 'miedo', 'susto', 'horror'],
+  'comedia': ['comedia', 'risa', 'reir', 'divertid', 'gracios'],
+  'romance': ['romance', 'romant', 'amor', 'pareja'],
+  'acción': ['accion', 'pelea', 'explosi'],
+  'suspenso': ['suspenso', 'thriller', 'misterio', 'intriga'],
+  'fantasía': ['fantasia', 'magia', 'magic'],
+  'drama': ['drama', 'llorar', 'emotiv', 'conmovedor'],
+  'aventura': ['aventura', 'dinosaur'],
+  'crimen': ['crimen', 'mafia', 'gangster'],
+};
+
+const sinTildes = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
 function recomendarConReglas({ consulta, catalogo, porVer }) {
-  const texto = (consulta || '').toLowerCase();
+  const texto = sinTildes(consulta || '');
   const enLista = new Set(porVer.map((p) => p.titulo));
   const generos = [...new Set(catalogo.map((p) => p.genero))];
-  let genero = generos.find((g) => texto.includes(g));
+  let genero = generos.find((g) => texto.includes(sinTildes(g)))
+    ?? generos.find((g) => (PALABRAS_POR_GENERO[g] ?? []).some((palabra) => texto.includes(palabra)));
   if (!genero && porVer.length) {
     const cuenta = {};
     for (const p of porVer) cuenta[p.genero] = (cuenta[p.genero] || 0) + 1;
     genero = Object.entries(cuenta).sort((a, b) => b[1] - a[1])[0][0];
   }
-  const candidatas = catalogo.filter((p) => !enLista.has(p.titulo) && (!genero || p.genero === genero)).slice(0, 3);
+  // No se recomienda lo que ya está en su lista ni la película que nombró en la pregunta.
+  const candidatas = catalogo
+    .filter((p) => !enLista.has(p.titulo) && !texto.includes(sinTildes(p.titulo)))
+    .filter((p) => !genero || p.genero === genero)
+    .slice(0, 3);
   if (!candidatas.length) return 'No encontré películas nuevas para recomendarte con esos datos. Prueba con otro género.';
   const lista = candidatas.map((p) => `«${p.titulo}» (${p.anio})`).join(', ');
   return genero ? `Si te gusta ${genero}, te recomiendo: ${lista}.` : `Te recomiendo empezar por: ${lista}.`;
